@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2D 1st-Person Tactical Action Prototype (20-Frame Units)</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #14171f;
+      color: #e2e8f0;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 16px;
+      gap: 12px;
+    }
+    header {
+      width: 960px;
+      max-width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    h1 {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      color: #f8fafc;
+    }
+    .subtitle {
+      font-size: 12px;
+      color: #94a3b8;
+    }
+    .stage-wrap {
+      position: relative;
+      width: 960px;
+      max-width: 100%;
+      border: 2px solid #334155;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      background: #000;
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      height: auto;
+      cursor: crosshair;
+    }
+    .hud-bar {
+      width: 960px;
+      max-width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      padding: 10px 16px;
+      font-family: monospace;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .hud-group { display: flex; gap: 20px; align-items: center; }
+    #hud-hp { color: #4ade80; }
+    #hud-ammo { color: #facc15; }
+    #hud-stance { color: #38bdf8; }
+    #hud-enemies { color: #fb7185; }
+    button {
+      background: #334155;
+      color: #f8fafc;
+      border: 1px solid #475569;
+      border-radius: 4px;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button:hover { background: #475569; }
+    .controls {
+      width: 960px;
+      max-width: 100%;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      padding: 10px 16px;
+      font-size: 12px;
+      color: #cbd5e1;
+      line-height: 1.6;
+    }
+    .controls kbd {
+      background: #0f172a;
+      border: 1px solid #475569;
+      border-radius: 3px;
+      padding: 1px 5px;
+      font-family: monospace;
+      color: #f8fafc;
+    }
+    #status-banner {
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.78);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      font-size: 28px;
+      font-weight: 800;
+      color: #facc15;
+    }
+    #status-banner.hidden { display: none; }
+    #restart-btn {
+      font-size: 15px;
+      padding: 10px 24px;
+      background: #e11d48;
+      border-color: #fb7185;
+    }
+    #restart-btn:hover { background: #be123c; }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>2D 1st-Person Tactical Action Prototype (Pure 2D Canvas / No 3D)</h1>
+      <div class="subtitle">1ユニット20枚のスプライト切り替え + 2.5D透視投影 + 遮蔽物カバー + 部位狙い</div>
+    </div>
+    <button id="debug-btn">20枚フレーム表示切替 (V)</button>
+  </header>
+
+  <div class="stage-wrap">
+    <canvas id="gameCanvas" width="960" height="540"></canvas>
+    <div id="status-banner" class="hidden">
+      <span>ALL UNITS CLEARED!</span>
+      <button id="restart-btn">Restart</button>
+    </div>
+  </div>
+
+  <div class="hud-bar">
+    <div class="hud-group">
+      <span id="hud-hp">HP: 100</span>
+      <span id="hud-ammo">AMMO: 6 / 24</span>
+      <span id="hud-stance">STANCE: STAND</span>
+    </div>
+    <span id="hud-enemies">TARGETS: 6 / 6</span>
+  </div>
+
+  <div class="controls">
+    <strong>操作方法:</strong>
+    画面クリックでマウス視点有効化（<kbd>Esc</kbd>で解除） /
+    <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 移動 /
+    <kbd>Q</kbd><kbd>E</kbd> or <kbd>←</kbd><kbd>→</kbd> 旋回 /
+    <kbd>左クリック</kbd> or <kbd>Space</kbd> 射撃（頭:大ダメージ / 脚:怯み停止） /
+    <kbd>右クリック</kbd> or <kbd>F</kbd> 精密エイム /
+    <kbd>Shift</kbd> or <kbd>C</kbd> しゃがみ（低い遮蔽物に隠れる） /
+    <kbd>R</kbd> リロード /
+    <kbd>V</kbd> 20枚スプライト番号表示
+  </div>
+
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
