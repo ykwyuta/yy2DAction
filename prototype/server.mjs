@@ -4,7 +4,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const PORT = 8123;
+const PORT = Number(process.env.PORT ?? 8123);
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -15,14 +15,21 @@ const MIME_TYPES = {
   '.png': 'image/png',
   '.jpg': 'image/jpeg',
   '.jpeg': 'image/jpeg',
+  '.webp': 'image/webp',
+  '.mp3': 'audio/mpeg',
 };
 
 const server = http.createServer((req, res) => {
   const urlPath = (req.url || '/').split('?')[0];
-  const relPath = urlPath === '/' ? 'index.html' : urlPath.replace(/^\/+/, '');
+  if (urlPath === '/live') {
+    res.writeHead(302, { Location: '/live/' });
+    res.end();
+    return;
+  }
+  const relPath = urlPath.endsWith('/') ? urlPath.slice(1) + 'index.html' : urlPath.slice(1);
   const filePath = path.join(__dirname, relPath);
 
-  if (!filePath.startsWith(__dirname)) {
+  if (!filePath.startsWith(__dirname + path.sep)) {
     res.writeHead(403);
     res.end('Forbidden');
     return;

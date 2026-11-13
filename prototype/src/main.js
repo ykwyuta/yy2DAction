@@ -1,6 +1,7 @@
 import { isSolid, checkLineOfSight } from './map.js';
 import { loadAllAssets } from './sprites.js';
 import { renderScene } from './engine.js';
+import { startCanvasLoop } from './canvas-engine.js';
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -459,11 +460,7 @@ function updateHUD() {
   enemiesEl.textContent = `TARGETS: ${alive} / ${state.enemies.length}`;
 }
 
-let lastTime = performance.now();
-function loop(now) {
-  const dt = Math.min(0.05, (now - lastTime) / 1000);
-  lastTime = now;
-
+function loop(_now, dt) {
   if (!state.gameOver) {
     state.time += dt;
     updatePlayer(dt);
@@ -473,7 +470,6 @@ function loop(now) {
 
   renderScene(ctx, canvas.width, canvas.height, state);
   updateHUD();
-  requestAnimationFrame(loop);
 }
 
 async function start() {
@@ -486,8 +482,7 @@ async function start() {
 
   loadedAssets = await loadAllAssets();
   initGame();
-  lastTime = performance.now();
-  requestAnimationFrame(loop);
+  startCanvasLoop(loop);
 }
 
 start();

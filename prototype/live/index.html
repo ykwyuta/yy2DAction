@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0d091a">
+  <title>STELLA LIVE</title>
+  <link rel="icon" href="./assets/aoi-reach.webp" type="image/webp">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="./"><span aria-hidden="true">✦</span> STELLA<span class="brand-live">LIVE</span></a>
+    <div class="tools">
+      <button id="sound" class="tool" type="button" aria-label="音声をミュート" aria-pressed="false">♫ <span>サウンド</span></button>
+      <button id="pause" class="tool" type="button" disabled aria-label="一時停止">Ⅱ <span>ポーズ</span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="game" id="game" data-mode="ready" aria-label="ライブステージ">
+      <canvas id="stage" aria-hidden="true"></canvas>
+      <div class="shade"></div>
+      <div class="live-stats">
+        <div><span>SCORE</span><strong id="score">0000000</strong></div>
+        <div><span>COMBO</span><strong id="combo">0</strong></div>
+      </div>
+      <div class="stage-copy" id="intro">
+        <p class="live-label"><i></i> LIVE STAGE</p>
+        <h1>きらり、<br><em>ひかる。</em></h1>
+        <p class="artist">星野 あおい<span>AOI HOSHINO</span></p>
+        <fieldset class="difficulty">
+          <legend class="sr-only">難易度</legend>
+          <label><input type="radio" name="difficulty" value="easy"><span>EASY</span></label>
+          <label><input type="radio" name="difficulty" value="normal" checked><span>NORMAL</span></label>
+        </fieldset>
+        <button class="primary" id="start" type="button" disabled><span aria-hidden="true">▶</span> <b>ライブ開始</b></button>
+        <p id="load-status" role="status">ステージを準備しています…</p>
+      </div>
+      <p id="lyric" class="lyric"></p>
+
+      <div class="rhythm">
+        <div class="highway">
+          <canvas id="chart" aria-hidden="true"></canvas>
+          <p id="judgment" aria-hidden="true"></p>
+        </div>
+        <div class="pads" aria-label="レーン操作">
+          <button type="button" aria-label="レーン1、D" data-lane="0">D</button>
+          <button type="button" aria-label="レーン2、F" data-lane="1">F</button>
+          <button type="button" aria-label="レーン3、J" data-lane="2">J</button>
+          <button type="button" aria-label="レーン4、K" data-lane="3">K</button>
+        </div>
+      </div>
+
+      <dialog id="overlay">
+        <p class="live-label" id="overlay-label"></p>
+        <h2 id="overlay-title"></h2>
+        <div id="results" hidden>
+          <div class="result-score"><strong id="rank"></strong><span id="final-score"></span></div>
+          <dl id="breakdown"></dl>
+        </div>
+        <button type="button" class="primary" id="overlay-primary"></button>
+        <button type="button" class="secondary" id="back">選曲に戻る</button>
+      </dialog>
+    </section>
+    <section class="track" aria-label="楽曲と操作">
+      <div class="track-title">
+        <div class="cover" aria-hidden="true">✦</div>
+        <div><strong>きらり、ひかる。</strong><span>星野 あおい <i>·</i> 128 BPM</span></div>
+      </div>
+      <div class="timeline">
+        <progress id="progress" value="0" max="61.875" aria-label="再生位置"></progress>
+        <div><span id="elapsed">0:00</span><span>1:02</span></div>
+      </div>
+      <p class="hint"><span><kbd>D</kbd><kbd>F</kbd><kbd>J</kbd><kbd>K</kbd></span> キーまたはレーンをタップ</p>
+    </section>
+  </main>
+  <script type="module" src="./src/live.mjs"></script>
+</body>
+</html>
