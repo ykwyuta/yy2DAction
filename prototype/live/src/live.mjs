@@ -1,5 +1,6 @@
-import { loadImage, startCanvasLoop } from '../../src/canvas-engine.js';
+import { startCanvasLoop } from '../../src/canvas-engine.js';
 import { createRun } from './chart.mjs';
+import { loadDancer } from './dancer.mjs';
 import { BEAT, DURATION, VOCALS } from './song.mjs';
 import { drawHighway, drawStage } from './stage.mjs';
 
@@ -26,7 +27,7 @@ const volume = track.createGain();
 volume.gain.value = 0.8;
 volume.connect(track.destination);
 
-let poses = [];
+let dancer;
 let song;
 let source;
 let clockOrigin = 0;
@@ -163,7 +164,7 @@ function frame(now) {
 
   const ready = mode === 'ready';
   const beat = time / BEAT;
-  drawStage(stage, stageContext, poses, ready ? (motion.matches ? 0 : now / 1300) : beat, ready, motion.matches);
+  drawStage(stage, stageContext, dancer, ready ? now / 1300 : beat, ready, motion.matches);
   if (!ready) drawHighway(chart, chartContext, run.notes, time, flashes, now);
   pads.forEach((pad, lane) => pad.toggleAttribute('data-hit', flashes[lane] > now && mode === 'playing'));
   get('judgment').hidden = judgmentUntil <= now;
@@ -228,10 +229,7 @@ async function loadSong() {
 }
 
 async function prepare() {
-  [poses, song] = await Promise.all([
-    Promise.all(['reach', 'rise', 'step'].map((pose) => loadImage(`./assets/aoi-${pose}.webp`))),
-    loadSong(),
-  ]);
+  [dancer, song] = await Promise.all([loadDancer(), loadSong()]);
   status.textContent = '';
   start.disabled = false;
 }

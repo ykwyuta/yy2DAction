@@ -17,11 +17,13 @@ EASY または NORMAL を選び、ノーツが判定ラインに重なったら�
 
 ### 素材の制作
 
-キャラクターの透過イラスト 3 枚とライブ会場の背景を、画像生成スキルの組み込み ImageGen で作成しました。ゲームでは WebP に変換した画像を使っています。
+キャラクターの透過イラスト 11 枚とライブ会場の背景を、画像生成スキルの組み込み ImageGen で作成しました。ゲームでは WebP に変換した画像を使っています。各イラストの頭、腰、足元の座標を揃え、拍に合わせてポーズと重心を補間しています。
 
 - [星野あおい・リーチ](prototype/live/assets/aoi-reach.webp) — 日本のアニメ調アイドルゲーム向けのオリジナルキャラクター。濃紺のハイポニーテール、ピンクの星形ヘアピン、白と紫の金縁ステージ衣装、ヘッドセットマイク。歌いながら右手を左上に伸ばし、足を開いて踏み出す全身ポーズ。透過背景。
 - [星野あおい・ライズ](prototype/live/assets/aoi-rise.webp) — リーチ画像を参照し、顔、髪、衣装、ライティングを揃える。左足に重心を移して膝を曲げ、右手を胸に添え、左腕を右上へ伸ばす。透過背景。
 - [星野あおい・ステップ](prototype/live/assets/aoi-step.webp) — リーチ画像を参照し、顔、髪、衣装、ライティングを揃える。右足に重心を移し、左のつま先を横に置く。右手は肩に、左腕は画面の右を指す。透過背景。
+- 中間ポーズ — ステップ画像を参照し、衣装、顔立ち、照明を揃えた透過の全身イラスト。[息継ぎ](prototype/live/assets/aoi-gather.webp)、[口を丸めて歌う](prototype/live/assets/aoi-open.webp)、[目を閉じて笑う](prototype/live/assets/aoi-sweep.webp)、[ウインク](prototype/live/assets/aoi-wink.webp)、[腕を斜めに伸ばす](prototype/live/assets/aoi-settle.webp)。
+- 向きの差分 — ステップ画像を参照。[正面で微笑む](prototype/live/assets/aoi-front.webp)、[左へ約55度向く](prototype/live/assets/aoi-turn-left.webp)、[右へ約60度向く](prototype/live/assets/aoi-turn-right.webp)。肩、腰、膝、つま先まで同じ方向に向け、ターンでは片足に重心を移す。
 - [ライブ会場](prototype/live/assets/arena.webp) — 深い藍色の屋内アリーナ。シアンと紫の照明、ピンクの LED、暗い客席のペンライト、床の反射。中央に出演者を合成するための空間を設けた横長の背景。
 
 音源を変更する場合は `prototype/live/src/song.mjs` の歌詞、音程、音価を編集します。次のコマンドで再生成できます。

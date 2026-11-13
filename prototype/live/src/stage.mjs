@@ -1,51 +1,35 @@
 import { fitCanvas } from '../../src/canvas-engine.js';
+import { stageLayout } from './choreography.mjs';
+import { drawDancer } from './dancer.mjs';
 
-const choreography = [2, 0, 2, 1, 2, 1, 0, 1];
 const colors = ['#fc8fd6', '#c1a6ff', '#8ce9ff', '#f8bbff'];
 const approach = 1.7;
 
-export function drawStage(canvas, ctx, poses, beat, ready, reducedMotion) {
+export function drawStage(canvas, ctx, dancer, beat, ready, reducedMotion) {
   const { width, height } = fitCanvas(canvas, ctx);
+  if (!width || !height) return;
   ctx.clearRect(0, 0, width, height);
-  const mobile = width < 700;
+  const layout = stageLayout(width, height, ready);
   const pulse = reducedMotion ? 0 : Math.exp(-5 * (beat % 1));
-  const swing = reducedMotion ? 0 : Math.sin(beat * Math.PI);
   const particleBeat = reducedMotion ? 0 : beat;
-  const center = width * (ready ? (mobile ? 0.62 : 0.67) : 0.5);
-  const foot = height * (ready ? (mobile ? 0.89 : 0.99) : (mobile ? 0.73 : 0.78));
 
   ctx.save();
   ctx.globalCompositeOperation = 'screen';
-  const bloom = ctx.createRadialGradient(center, height * 0.45, 10, center, height * 0.45, height * 0.64);
+  const lightY = layout.floor - layout.body * 0.63;
+  const bloom = ctx.createRadialGradient(layout.center, lightY, 0, layout.center, lightY, height * 0.6);
   bloom.addColorStop(0, `rgba(224,103,247,${0.19 + pulse * 0.15})`);
   bloom.addColorStop(1, 'rgba(113,40,215,0)');
   ctx.fillStyle = bloom;
   ctx.fillRect(0, 0, width, height);
   for (let i = 0; i < 26; i++) {
     const y = ((i * 0.263 + particleBeat * 0.022) % 1) * height;
-    const x = ((i * 0.618 + Math.sin(i + particleBeat * 0.18) * 0.025) % 1) * width;
+    const x = ((1 + i * 0.618 + Math.sin(i + particleBeat * 0.18) * 0.025) % 1) * width;
     ctx.globalAlpha = 0.2 + pulse * 0.25;
     ctx.fillStyle = colors[i % colors.length];
     ctx.fillRect(x, y, 2 + i % 3, 2 + i % 3);
   }
   ctx.restore();
-  if (!poses.length) return;
-
-  ctx.save();
-  ctx.translate(center, foot);
-  ctx.fillStyle = '#08051f80';
-  ctx.beginPath();
-  ctx.ellipse(0, 1, height * 0.17, height * 0.022, 0, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.translate(ready ? 0 : swing * 10, -pulse * (ready ? 1 : 9));
-  ctx.rotate(swing * (ready ? 0.004 : 0.034));
-  ctx.shadowColor = '#2d104d';
-  ctx.shadowBlur = 18;
-  const pose = poses[ready ? 0 : choreography[Math.floor(beat / 2) % choreography.length]];
-  const spriteHeight = height * (ready ? (mobile ? 0.82 : 0.95) : 0.7);
-  const spriteWidth = spriteHeight * pose.width / pose.height;
-  ctx.drawImage(pose, -spriteWidth * 0.47, -spriteHeight, spriteWidth, spriteHeight);
-  ctx.restore();
+  if (dancer) drawDancer(ctx, dancer, layout, beat, ready, reducedMotion);
 }
 
 export function drawHighway(canvas, ctx, notes, time, flashes, now) {
@@ -57,8 +41,8 @@ export function drawHighway(canvas, ctx, notes, time, flashes, now) {
   const yAt = (depth) => hitY * depth;
   const floor = ctx.createLinearGradient(0, 0, 0, hitY);
   floor.addColorStop(0, '#160d2908');
-  floor.addColorStop(0.5, '#160d29a8');
-  floor.addColorStop(1, '#0e091eef');
+  floor.addColorStop(0.58, '#160d295c');
+  floor.addColorStop(1, '#0e091edc');
   ctx.fillStyle = floor;
   ctx.beginPath();
   ctx.moveTo(xAt(0, 0), 0);
